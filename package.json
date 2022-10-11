@@ -1,0 +1,38 @@
+{
+  "name": "real-me",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/server": "^11.10.0",
+    "@mantine/core": "^5.5.5",
+    "@mantine/form": "^5.5.5",
+    "@mantine/hooks": "^5.5.5",
+    "@mantine/next": "^5.5.5",
+    "@mantine/notifications": "^5.5.5",
+    "@tanstack/react-query": "^4.10.3",
+    "@trpc/client": "^10.0.0-proxy-beta.17",
+    "@trpc/next": "^10.0.0-proxy-beta.17",
+    "@trpc/react": "^10.0.0-proxy-beta.17",
+    "@trpc/server": "^10.0.0-proxy-beta.17",
+    "courier-otp": "^0.0.3",
+    "next": "12.3.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "superjson": "^1.10.1"
+  },
+  "devDependencies": {
+    "@types/node": "18.8.4",
+    "@types/react": "18.0.21",
+    "@types/react-dom": "18.0.6",
+    "eslint": "8.25.0",
+    "eslint-config-next": "12.3.1",
+    "typescript": "4.8.4"
+  }
+}
