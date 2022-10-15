@@ -1,10 +1,11 @@
 import type { NextPage } from 'next'
+import LandingLayout from '~/client/layouts/Landing'
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <LandingLayout>
       This will be the home page
-    </div>
+    </LandingLayout>
   )
 }
 

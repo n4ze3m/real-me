@@ -17,7 +17,7 @@ import { trpc } from "~/utils/trpc";
 type AuthStateType = "SEND" | "VALIDATE" | "REGISTER";
 const useStyles = createStyles((theme) => ({
   wrapper: {
-    minHeight: 900,
+    minHeight: "100%",
     backgroundSize: "cover",
     backgroundImage:
       "url(https://images.unsplash.com/photo-1520880867055-1e30d1cb001c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1280&q=100)",
@@ -29,10 +29,11 @@ const useStyles = createStyles((theme) => ({
     }`,
     minHeight: 900,
     maxWidth: 450,
-    paddingTop: 80,
+    paddingTop: 0,
 
     [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
       maxWidth: "100%",
+      height: "100%",
     },
   },
 

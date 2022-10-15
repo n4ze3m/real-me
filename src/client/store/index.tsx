@@ -1,17 +1,12 @@
+import { Prisma } from "@prisma/client";
 import store from "zustand";
 
-export type IUser = {
-    id: string;
-    name: string;
-    email: string;
-}
-
-
 export type IAuthStore = {
-    user: IUser | null;
-}
+  user: Prisma.UserCreateInput | null;
+  setUser: (user: Prisma.UserCreateInput) => void;
+};
 
 export const useAuthStore = store<IAuthStore>((set) => ({
-    user: null,
-    setUser: (user: IUser) => set({ user }),
-}))
+  user: null,
+  setUser: (user: Prisma.UserCreateInput) => set({ user }),
+}));

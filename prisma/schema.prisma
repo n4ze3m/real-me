@@ -18,4 +18,25 @@ model User {
   avatar    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  reals     Real[]
+}
+
+model RealInfo {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  reals     Real[]
+}
+
+model Real {
+  id         String   @id @default(cuid())
+  picOne     String
+  picTwo     String
+  location   String?
+  author     User     @relation(fields: [authorId], references: [id])
+  realInfoId String
+  realInfo   RealInfo @relation(fields: [realInfoId], references: [id])
+  authorId   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
