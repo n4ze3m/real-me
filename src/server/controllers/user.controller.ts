@@ -133,3 +133,62 @@ export const findUserByUsernameHandler = async ({
 
 
 }
+
+export const buddiesTimlineHandler = async ({
+    ctx
+}: {
+    ctx: Context
+}) => {
+    if (!ctx.user) {
+        return {
+            code: "UNAUTHORIZED",
+            error: true,
+            reals: null
+        }
+    }
+
+    const following = await database.buddy.findMany({
+        where: {
+            accepted: true,
+            followerId: ctx.user.id
+        },
+        select: {
+            followingId: true
+        }
+    })
+
+    if (following.length === 0) {
+        return {
+            code: "NO_BUDDIES",
+            error: false,
+            reals: []
+        }
+    }
+
+    const followingIds = following.map(f => f.followingId)
+
+    const timeline = await database.real.findMany({
+        where: {
+            authorId: {
+                in: followingIds
+            }
+        },
+        include: {
+            author: true,
+            realInfo: true,
+        },
+        orderBy: [
+            {
+                createdAt: "desc"
+            }
+        ]
+    })
+
+
+    return {
+        code: "OK",
+        error: false,
+        reals: timeline
+    }
+
+}
