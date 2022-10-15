@@ -14,6 +14,11 @@ export const authRegisterSchema = object({
     username: string().min(3, { message: "Username must be at least 3 characters" }),
 })
 
+export const findUserByUsername = object({
+    username: string().min(3, { message: "Username must be at least 3 characters" }),
+})
+
 export type AuthUserEmailInput = TypeOf<typeof authEmailSchema>
 export type AuthUserEmailVerifyInput = TypeOf<typeof authEmailVerifySchema>
 export type AuthUserRegisterInput = TypeOf<typeof authRegisterSchema>
+export type FindUserByUsernameInput = TypeOf<typeof findUserByUsername>

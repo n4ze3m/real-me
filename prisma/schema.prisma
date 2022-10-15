@@ -19,6 +19,19 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   reals     Real[]
+  followers Buddy[]  @relation("following")
+  following Buddy[]  @relation("follower")
+}
+
+model Buddy {
+  follower    User     @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User     @relation("following", fields: [followingId], references: [id])
+  followingId String
+  accepted    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@id([followerId, followingId])
 }
 
 model RealInfo {
@@ -37,6 +50,7 @@ model Real {
   realInfoId String
   realInfo   RealInfo @relation(fields: [realInfoId], references: [id])
   authorId   String
+  type       String   @default("PUBLIC")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

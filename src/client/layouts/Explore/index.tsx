@@ -134,17 +134,15 @@ function ExploreLayout({ children }: Props) {
                   <Avatar
                     src={
                       user
-                        ? "https://avatars.dicebear.com/api/jdenticon/ba.svg?background=%230000ff"
+                        ? `https://avatars.dicebear.com/api/jdenticon/${user?.id}.svg?background=%230000ff`
                         : "https://avatars.dicebear.com/api/jdenticon/xdsds-sdsdsds-dsdsds.svg?background=%230000ff"
                     }
                     radius="xl"
                     size={30}
                     mr="sm"
                   />
-                  <MediaQuery smallerThan={"sm"}  styles={{ display: "none" }}>
-                    <div
-                    
-                    >
+                  <MediaQuery smallerThan={"sm"} styles={{ display: "none" }}>
+                    <div>
                       <Text>{user ? user.name : "..."}</Text>
                       <Text size="sm" color="dimmed">
                         {user && `@${user.username}`}
