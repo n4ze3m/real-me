@@ -16,14 +16,12 @@ const cookieOptions: OptionsType = {
 
 const accessTokenCookieOptions = {
     ...cookieOptions,
-    expires: new Date(Date.now() + jwtConfig.accessTokenExpiresIn * 60 * 1000),
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
 };
 
 const refreshTokenCookieOptions = {
     ...cookieOptions,
-    expires: new Date(
-        Date.now() + jwtConfig.refreshTokenExpiresIn * 60 * 1000
-    ),
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
 };
 
 export const authEmailSendHandler = async ({

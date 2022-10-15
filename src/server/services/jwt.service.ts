@@ -11,7 +11,7 @@ export const signToken = async (user: Prisma.UserCreateInput) => {
     const refresh_token = signJwt({
         sub: user.id,
     }, 'refreshTokenPrivateKey', {
-        expiresIn: 60 * 60 * 24 * 365,
+        expiresIn: 60 * 60 * 24 * 30,
     })
 
 
