@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { AuthBody } from "~/client/components/Auth";
 
-export const Auth: NextPage = () => {
+ const Auth: NextPage = () => {
   return (
     <>
       <Head>
@@ -13,3 +13,5 @@ export const Auth: NextPage = () => {
     </>
   );
 };
+
+export default Auth;
