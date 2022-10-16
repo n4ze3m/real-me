@@ -8,6 +8,7 @@ import {
   Skeleton,
   Text,
 } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import { useRouter } from "next/router";
 import React from "react";
 import { Lock } from "tabler-icons-react";
@@ -18,6 +19,7 @@ type UserErrorState = "NOT_FOUND" | "OK" | "LOADING";
 export const UserBody = () => {
   const router = useRouter();
   const [userError, setUserError] = React.useState<UserErrorState>("OK");
+  const client = trpc.useContext();
 
   const { data, status } = trpc.user.findUserByUsername.useQuery(
     {
@@ -35,6 +37,19 @@ export const UserBody = () => {
     }
   );
 
+  const { mutate: followUser } = trpc.user.followOrUnfollowBuddy.useMutation({
+    onSuccess: () => {
+      client.user.findUserByUsername.refetch({
+        username: router.query.username as string,
+      });
+
+      showNotification({
+        title:"Success",
+        message: "Followed user",
+      })
+    },
+  });
+
   const button = (state: string) => {
     switch (state) {
       case "SAME_USER":
@@ -46,14 +61,34 @@ export const UserBody = () => {
 
       case "FOLLOWING":
         return (
-          <Button size="sm" color="teal">
+          <Button
+            size="sm"
+            color="teal"
+            onClick={() => followUser({ followingId: data?.user?.id || "" })}
+          >
             Following
           </Button>
         );
       case "NOT_FOLLOWING":
         return (
-          <Button size="sm" variant="outline" color="teal">
+          <Button
+            size="sm"
+            variant="outline"
+            color="teal"
+            onClick={() => followUser({ followingId: data?.user?.id || "" })}
+          >
             Follow
+          </Button>
+        );
+      case "REQUESTED":
+        return (
+          <Button
+            variant="outline"
+            size="sm"
+            color="teal"
+            onClick={() => followUser({ followingId: data?.user?.id || "" })}
+          >
+            Requested
           </Button>
         );
       default:

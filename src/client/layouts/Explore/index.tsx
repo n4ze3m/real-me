@@ -8,11 +8,13 @@ import {
   Container,
   Avatar,
   Indicator,
+  UnstyledButton,
 } from "@mantine/core";
+import { Inbox } from "@trycourier/react-inbox";
 
 import { useRouter } from "next/router";
 import React from "react";
-import { ChevronRight } from "tabler-icons-react";
+import { ChevronRight, Friends } from "tabler-icons-react";
 import { useAuthStore } from "~/client/store";
 
 const useStyles = createStyles((theme) => ({
@@ -94,7 +96,7 @@ type Props = {
 };
 
 function ExploreLayout({ children }: Props) {
-  const { user } = useAuthStore();
+  const { user, pendingNotification } = useAuthStore();
 
   const router = useRouter();
   const { classes } = useStyles();
@@ -130,6 +132,18 @@ function ExploreLayout({ children }: Props) {
                 </Indicator>
               </div>
               <Group position="right">
+                {user && (
+                  <>
+                    <UnstyledButton
+                      onClick={() => router.push("/explore/buddies")}
+                    >
+                      <Indicator color="teal" disabled={pendingNotification}>
+                        <Friends />
+                      </Indicator>
+                    </UnstyledButton>
+                    <Inbox />
+                  </>
+                )}
                 <Group spacing={7}>
                   <Avatar
                     src={
