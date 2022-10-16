@@ -1,0 +1,1 @@
+export const fetchLocation = async (location: string) => {}

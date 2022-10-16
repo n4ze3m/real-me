@@ -1,6 +1,5 @@
 import {
   Button,
-  Center,
   Divider,
   Group,
   Text,
@@ -12,7 +11,11 @@ import React from "react";
 import Webcam from "react-webcam";
 import { Circle, SwitchHorizontal } from "tabler-icons-react";
 import { useCameraStore } from "~/client/store";
-type PossibleCameraIndex = 0 | 1;
+import { RealImage } from "../../Common/RealImage";
+import { ErrorState } from "./ErrorState";
+import { LoadingState } from "./LoadingState";
+import { UploadState } from "./UploadState";
+
 type RealPostState = "LOADING" | "SUCCESS" | "ERROR" | "UPLOAD";
 
 const useStyles = createStyles(() => ({
@@ -26,8 +29,8 @@ const useStyles = createStyles(() => ({
     right: "1rem",
   },
   cam: {
-    display: "block"
-  }
+    display: "block",
+  },
 }));
 
 export const RealPostBody = () => {
@@ -41,7 +44,6 @@ export const RealPostBody = () => {
   const { classes } = useStyles();
 
   const switchCamera = () => {
-    // either 0 or 1
     setCameraIndex((cameraIndex + 1) % 2);
   };
 
@@ -132,22 +134,8 @@ export const RealPostBody = () => {
 
   return (
     <>
-      {state === "LOADING" && <div>loading..</div>}
-      {state === "ERROR" && (
-        <Group p="xl" mt="md" position="center">
-          <div>
-            <Text>
-              To use Real Me, you need to have at least 2 cameras available on
-              your device.
-            </Text>
-            <Center>
-              <Button color="teal" mt="md">
-                Go back
-              </Button>
-            </Center>
-          </div>
-        </Group>
-      )}
+      {state === "LOADING" && <LoadingState />}
+      {state === "ERROR" && <ErrorState />}
       {state === "SUCCESS" && (
         <div>
           <LoadingOverlay
@@ -155,12 +143,14 @@ export const RealPostBody = () => {
             title={`Don't move! Keep smiling!`}
           />
           <div className={classes.camContainer}>
-            <div
-            className={classes.camText}
-            >
-              <Text color="white" size="lg" styles={{
-                textShadow: "0 0 10px rgba(0,0,0,0.5)"
-              }}>
+            <div className={classes.camText}>
+              <Text
+                color="white"
+                size="lg"
+                styles={{
+                  textShadow: "0 0 10px rgba(0,0,0,0.5)",
+                }}
+              >
                 {formatCountdown}
               </Text>
             </div>
@@ -175,7 +165,7 @@ export const RealPostBody = () => {
           </div>
           <Divider my="md" />
           <Group position="apart" p="xl">
-            <div></div>
+            <div />
             <div>
               <Button
                 onClick={async () => {
@@ -201,10 +191,10 @@ export const RealPostBody = () => {
         </div>
       )}
       {state === "UPLOAD" && (
-        <div>
-          {takenPicture.pic0 && <img src={takenPicture.pic0} />}
-          {takenPicture.pic1 && <img src={takenPicture.pic1} />}
-        </div>
+        <UploadState
+          picture1={takenPicture.pic0}
+          picture2={takenPicture.pic1}
+        />
       )}
     </>
   );
