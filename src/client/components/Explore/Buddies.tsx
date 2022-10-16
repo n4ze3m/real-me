@@ -1,7 +1,16 @@
-import { Button, Center, Group, Paper, Text } from "@mantine/core";
+import {
+  Button,
+  Center,
+  Container,
+  Group,
+  Paper,
+  SimpleGrid,
+  Text,
+} from "@mantine/core";
 import { useRouter } from "next/router";
 import React from "react";
 import { trpc } from "~/utils/trpc";
+import { ExploreCard } from "../Common/ExploreCard";
 
 type BuddiesState = "OK" | "UNAUTHORIZED" | "NO_BUDDIES" | "LOADING";
 
@@ -10,7 +19,7 @@ export const Buddies = () => {
   const [buddiesState, setBuddiesState] =
     React.useState<BuddiesState>("LOADING");
 
-  const { data: buddies, status } = trpc.user.buddiesTimeline.useQuery(
+  const { data: buddies } = trpc.user.buddiesTimeline.useQuery(
     undefined,
     {
       onSuccess: (data) => {
@@ -52,6 +61,27 @@ export const Buddies = () => {
             </div>
           </Group>
         </Paper>
+      )}
+      {buddiesState === "OK" && (
+        <Container size={800} mt="md" p="0">
+        <SimpleGrid
+          cols={2}
+          spacing="md"
+          breakpoints={[
+            { maxWidth: 980, cols: 2, spacing: "md" },
+            { maxWidth: 755, cols: 2, spacing: "sm" },
+            { maxWidth: 600, cols: 1, spacing: "sm" },
+          ]}
+        >
+            {buddies &&
+              buddies.reals &&
+              buddies.reals.map((real, index) => (
+                <div key={index}>
+                  <ExploreCard {...real} />
+                </div>
+              ))}
+        </SimpleGrid>
+          </Container>
       )}
     </div>
   );

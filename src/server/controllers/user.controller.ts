@@ -353,7 +353,9 @@ export const buddiesList = async ({
     const buddies = [
         ...followers.map(f => f.follower),
         ...following.map(f => f.following)
-    ]
+    ].filter((buddy, index, self) => {
+        return self.findIndex(b => b.id === buddy.id) === index
+    })
 
     return {
         code: "OK",

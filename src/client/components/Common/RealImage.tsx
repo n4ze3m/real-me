@@ -10,6 +10,7 @@ const useStyles = createStyles(() => ({
   mainDiv: {
     position: "relative",
     display: "inline-block",
+    width: "100%",
   },
   smallDiv: {
     position: "absolute",
@@ -19,7 +20,8 @@ const useStyles = createStyles(() => ({
     height: "25%",
   },
   mainImage: {
-    display: "block",
+    // display: "block",
+    width: "100%",
   },
 }));
 
@@ -40,7 +42,7 @@ export const RealImage = ({ picture1, picture2 }: IRealImageProps) => {
     <div className={classes.mainDiv}>
       <Image src={image1} alt="Main image" className={classes.mainImage} />
       <div className={classes.smallDiv}>
-        <Image src={image2} radius="lg"   alt="Small image" onClick={switchImage} />
+        <Image src={image2} radius="lg" alt="Small image" onClick={switchImage} />
       </div>
     </div>
   );
