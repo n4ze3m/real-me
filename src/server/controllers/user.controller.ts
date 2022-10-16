@@ -2,7 +2,6 @@ import { database } from "~/utils/database"
 import { Context } from "../context"
 import { FindUserByUsernameInput, FollowBuddyInput } from "../schema/user.schema"
 import crypto from "crypto";
-import { CourierClient } from "@trycourier/courier";
 import { courierNotification } from "../services/courier.service";
 
 export const currentUserHandler = async ({
@@ -17,7 +16,7 @@ export const currentUserHandler = async ({
         const pendingRequests = await database.buddy.count({
             where: {
                 accepted: false,
-                followerId: userId
+                followingId: userId
             }
         })
 

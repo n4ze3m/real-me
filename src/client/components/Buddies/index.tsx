@@ -1,4 +1,4 @@
-import { Container, Skeleton, Tabs } from "@mantine/core";
+import { Container, Skeleton, Tabs, Text } from "@mantine/core";
 import { Friends, UserPlus } from "tabler-icons-react";
 import { trpc } from "~/utils/trpc";
 import { BuddieCard } from "./BuddieCard";
@@ -19,14 +19,19 @@ export const BuddiesBody = () => {
       <Tabs mt="md" color="green" variant="outline" defaultValue="pending">
         <Tabs.List grow>
           <Tabs.Tab value="pending" icon={<UserPlus size={14} />}>
-            Explore
+            Pending Buddies
           </Tabs.Tab>
           <Tabs.Tab value="friends" icon={<Friends size={14} />}>
-            Buddies
+            All Buddies
           </Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel value="pending" pt="xs">
+          {data.buddies.pending.length === 0 && (
+            <Text align="center" my="md" color="dimmed">
+              You have no pending buddy requests
+            </Text>
+          )}
           <Container size={450} mt="md">
             {data.buddies.pending.map((buddy) => (
               <BuddieCard user={buddy.follower} isPending={true} />
@@ -35,7 +40,16 @@ export const BuddiesBody = () => {
         </Tabs.Panel>
 
         <Tabs.Panel value="friends" pt="xs">
-          s
+          {data.buddies.buddies.length === 0 && (
+            <Text align="center" my="md" color="dimmed">
+              Oops, you have no buddies yet
+            </Text>
+          )}
+          <Container size={450} mt="md">
+            {data.buddies.buddies.map((buddy) => (
+              <BuddieCard user={buddy} isPending={false} />
+            ))}
+          </Container>
         </Tabs.Panel>
       </Tabs>
     </div>
