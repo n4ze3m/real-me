@@ -18,3 +18,18 @@ export const useAuthStore = store<IAuthStore>((set) => ({
   pendingNotification: false,
   setPendingNotification: (pendingNotification: boolean) => set({ pendingNotification }),
 }));
+
+
+export type ICameraStore = {
+  cameraIndex: number;
+  setCameraIndex: (cameraIndex: number) => void;
+  takeAuto: boolean;
+  setTakeAuto: (takeAuto: boolean) => void;
+}
+
+export const useCameraStore = store<ICameraStore>((set) => ({
+  cameraIndex: 0,
+  setCameraIndex: (cameraIndex: number) => set({ cameraIndex }),
+  setTakeAuto: (takeAuto: boolean) => set({ takeAuto }),
+  takeAuto: false,
+}));

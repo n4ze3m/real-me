@@ -1,14 +1,91 @@
-import { Button, Center, Group, Text } from "@mantine/core";
+import {
+  Button,
+  Center,
+  Divider,
+  Group,
+  Text,
+  UnstyledButton,
+  LoadingOverlay,
+  createStyles,
+} from "@mantine/core";
 import React from "react";
+import Webcam from "react-webcam";
+import { Circle, SwitchHorizontal } from "tabler-icons-react";
+import { useCameraStore } from "~/client/store";
 type PossibleCameraIndex = 0 | 1;
-type RealPostState = "LOADING" | "SUCCESS" | "ERROR";
+type RealPostState = "LOADING" | "SUCCESS" | "ERROR" | "UPLOAD";
+
+const useStyles = createStyles(() => ({
+  camContainer: {
+    position: "relative",
+    display: "inline-block",
+  },
+  camText: {
+    position: "absolute",
+    bottom: "1rem",
+    right: "1rem",
+  },
+  cam: {
+    display: "block"
+  }
+}));
 
 export const RealPostBody = () => {
   const [devices, setDevices] = React.useState([]);
   const [state, setState] = React.useState<RealPostState>("LOADING");
-  const [cameraIndex, setCameraIndex] = React.useState<PossibleCameraIndex>(0);
+  const { cameraIndex, setCameraIndex, setTakeAuto, takeAuto } =
+    useCameraStore();
   const [countdown, setCountdown] = React.useState(120);
   const [formatCountdown, setFormatCountdown] = React.useState("2:00");
+  const [loadOverlay, setLoadOverlay] = React.useState(false);
+  const { classes } = useStyles();
+
+  const switchCamera = () => {
+    // either 0 or 1
+    setCameraIndex((cameraIndex + 1) % 2);
+  };
+
+  const sleep = async (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
+  const [takenPicture, setTakenPicture] = React.useState({
+    pic0: "",
+    pic1: "",
+  });
+
+  const webcamRef = React.useRef(null);
+  const autoCapture = React.useCallback(async () => {
+    await sleep(5000);
+    if (webcamRef.current) {
+      // @ts-ignore
+      const imageSrc = webcamRef.current.getScreenshot();
+      setTakenPicture((prev) => {
+        return {
+          ...prev,
+          [`pic${cameraIndex}`]: imageSrc,
+        };
+      });
+      setState("UPLOAD");
+    }
+  }, [webcamRef, cameraIndex, sleep]);
+  React.useEffect(() => {
+    if (takeAuto) {
+      autoCapture();
+    }
+  }, [cameraIndex]);
+  const capture = React.useCallback(async () => {
+    if (webcamRef.current) {
+      // @ts-ignore
+      const imageSrc = webcamRef.current.getScreenshot();
+      setTakenPicture((prev) => {
+        return {
+          ...prev,
+          [`pic${cameraIndex}`]: imageSrc,
+        };
+      });
+    }
+  }, [webcamRef, cameraIndex]);
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
@@ -71,9 +148,64 @@ export const RealPostBody = () => {
           </div>
         </Group>
       )}
-      {state === "SUCCESS" && <div>
-        {formatCountdown}
-        </div>}
+      {state === "SUCCESS" && (
+        <div>
+          <LoadingOverlay
+            visible={loadOverlay}
+            title={`Don't move! Keep smiling!`}
+          />
+          <div className={classes.camContainer}>
+            <div
+            className={classes.camText}
+            >
+              <Text color="white" size="lg" styles={{
+                textShadow: "0 0 10px rgba(0,0,0,0.5)"
+              }}>
+                {formatCountdown}
+              </Text>
+            </div>
+            <Webcam
+              audio={false}
+              width="100%"
+              ref={webcamRef}
+              className={classes.cam}
+              // @ts-ignore
+              videoConstraints={{ deviceId: devices[cameraIndex]?.deviceId! }}
+            />
+          </div>
+          <Divider my="md" />
+          <Group position="apart" p="xl">
+            <div></div>
+            <div>
+              <Button
+                onClick={async () => {
+                  setTakeAuto(true);
+                  await Promise.all([capture(), sleep(1000)]);
+                  setCameraIndex((cameraIndex + 1) % 2);
+                  setLoadOverlay(true);
+                }}
+                radius="xl"
+                variant="outline"
+                size="xl"
+                color="teal"
+              >
+                <Circle size={45} />
+              </Button>
+            </div>
+            <div>
+              <UnstyledButton onClick={switchCamera}>
+                <SwitchHorizontal />
+              </UnstyledButton>
+            </div>
+          </Group>
+        </div>
+      )}
+      {state === "UPLOAD" && (
+        <div>
+          {takenPicture.pic0 && <img src={takenPicture.pic0} />}
+          {takenPicture.pic1 && <img src={takenPicture.pic1} />}
+        </div>
+      )}
     </>
   );
 };
