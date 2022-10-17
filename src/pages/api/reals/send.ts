@@ -3,7 +3,7 @@ import { CourierClient } from '@trycourier/courier'
 import moment from 'moment'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { database } from '~/utils/database'
-import { getBaseUrl } from '~/utils/trpc'
+import { getUrl } from '~/utils/url'
 
 
 
@@ -62,7 +62,7 @@ export default async function handler(
                     message,
                     subject: title,
                     btn: 'Capture',
-                    click: `${getBaseUrl()}/reals/post/${realInfo.id}`
+                    click: `${getUrl()}/reals/post/${realInfo.id}`
                 },
             },
 
