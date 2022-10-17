@@ -7,6 +7,7 @@ import {
   Group,
   Modal,
   Paper,
+  SimpleGrid,
   Skeleton,
   Text,
 } from "@mantine/core";
@@ -19,6 +20,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Lock, Trash } from "tabler-icons-react";
 import { trpc } from "~/utils/trpc";
+import { ExploreCard } from "../Common/ExploreCard";
 import { RealImage } from "../Common/RealImage";
 
 type UserErrorState = "NOT_FOUND" | "OK" | "LOADING";
@@ -259,7 +261,25 @@ export const UserBody = () => {
       );
     }
 
-    return <div>Latest reals tha</div>;
+    return (
+      <SimpleGrid
+        cols={2}
+        spacing="md"
+        breakpoints={[
+          { maxWidth: 980, cols: 2, spacing: "md" },
+          { maxWidth: 755, cols: 2, spacing: "sm" },
+          { maxWidth: 600, cols: 1, spacing: "sm" },
+        ]}
+      >
+        {data?.user &&
+          data?.user.reals.map((real, index) => (
+            <div key={index}>
+{/* @ts-ignore */}
+              <ExploreCard {...real} />
+            </div>
+          ))}
+      </SimpleGrid>
+    );
   };
 
   if (status === "loading") {
@@ -276,7 +296,7 @@ export const UserBody = () => {
         <Group position="center" mt="md">
           <div>
             <Text align="center" size="xl" color="dimmed">
-             {"I'm sorry, but we couldn't find that user. Please try again"}
+              {"I'm sorry, but we couldn't find that user. Please try again"}
             </Text>
             <Center>
               <Button

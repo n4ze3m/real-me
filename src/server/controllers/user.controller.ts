@@ -4,6 +4,7 @@ import { FindUserByUsernameInput, FollowBuddyInput } from "../schema/user.schema
 import crypto from "crypto";
 import { courierNotification } from "../services/courier.service";
 import moment from "moment";
+import { getBaseUrl } from "~/utils/trpc";
 
 export const currentUserHandler = async ({
     ctx
@@ -35,7 +36,7 @@ export const currentUserHandler = async ({
                     realInfoId: newReal.id
                 }
             })
-            if(!isUserPosted){
+            if (!isUserPosted) {
                 userPosted = false
                 realPath = `/explore/reals/post/${newReal.id}`
             }
@@ -125,6 +126,19 @@ export const findUserByUsernameHandler = async ({
             const showReal = isFollowing && isFollowing.accepted
             const code = isFollowing ? isFollowing.accepted ? "FOLLOWING" : "REQUESTED" : "NOT_FOLLOWING"
 
+            const userReals = await database.real.findMany({
+                where: {
+                    authorId: user.id,
+                    createdAt: {
+                        gte: moment().startOf('day').toDate(),
+                        lte: moment().endOf('day').toDate()
+                    }
+                },
+                include: {
+                    author: true,
+                    realInfo: true
+                }
+            })
 
             return {
                 code,
@@ -133,7 +147,7 @@ export const findUserByUsernameHandler = async ({
                     id: user.id,
                     name: user.name,
                     username: user.username,
-                    reals: user.reals,
+                    reals: showReal ? userReals : [],
                     followers: user._count?.followers,
                     following: user._count?.following,
                     realsCount: user._count?.reals,
@@ -320,7 +334,7 @@ export const followBuddyHandler = async ({
         title: "New follower request",
         subject: "New follower request",
         btn: "View Pending Requests",
-        click: "https://reals.vercel.app/pending-requests"
+        click: `${getBaseUrl()}/explore/buddies`
     })
 
     return {
@@ -449,7 +463,7 @@ export const acceptOrRemoveBuddyHandler = async ({
         title: "Request Accepted",
         subject: "Request Accepted",
         btn: "View all buddies",
-        click: "https://reals.vercel.app/pending-requests"
+        click: `${getBaseUrl()}/explore/buddies`
     })
 
 
