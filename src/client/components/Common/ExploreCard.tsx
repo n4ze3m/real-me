@@ -1,5 +1,6 @@
 import { Avatar, Card, Group, Text } from "@mantine/core";
 import { Real, RealInfo, User } from "@prisma/client";
+import { useRouter } from "next/router";
 import { RealImage } from "./RealImage";
 
 export const ExploreCard = (
@@ -9,11 +10,13 @@ export const ExploreCard = (
   },
   isProfile?: boolean
 ) => {
+  const router = useRouter();
+
   return (
     <Card withBorder shadow="sm" mb="md" radius="md">
       <Card.Section withBorder inheritPadding py="xs">
         <Group position="apart">
-          <Group>
+          <Group onClick={() => router.push(`/@/${real.author.username}`)}>
             <Avatar
               src={`https://avatars.dicebear.com/api/jdenticon/${real.author.id}.svg?background=%230000ff`}
               radius="xl"
@@ -21,9 +24,10 @@ export const ExploreCard = (
               mr="sm"
             />
             <div>
-              <Text color="dimmed">
-                {`@${real.author.username}`}
-              </Text>
+              <Text
+                onClick={() => router.push(`/@/${real.author.username}`)}
+                color="dimmed"
+              >{`@${real.author.username}`}</Text>
             </div>
           </Group>
         </Group>

@@ -11,7 +11,6 @@ import React from "react";
 import Webcam from "react-webcam";
 import { Circle, SwitchHorizontal } from "tabler-icons-react";
 import { useCameraStore } from "~/client/store";
-import { RealImage } from "../../Common/RealImage";
 import { ErrorState } from "./ErrorState";
 import { LoadingState } from "./LoadingState";
 import { UploadState } from "./UploadState";

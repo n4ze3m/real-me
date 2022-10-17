@@ -1,6 +1,8 @@
 import { Group, Text, Button, Center } from "@mantine/core";
+import { useRouter } from "next/router";
 
 export const ErrorState = () => {
+  const router = useRouter()
   return (
     <Group p="xl" mt="md" position="center">
       <div>
@@ -9,7 +11,9 @@ export const ErrorState = () => {
           device.
         </Text>
         <Center>
-          <Button color="teal" mt="md">
+          <Button 
+          onClick={() => router.push("/explore")}
+          color="teal" mt="md">
             Go back
           </Button>
         </Center>

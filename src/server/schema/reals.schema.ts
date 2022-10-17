@@ -8,4 +8,9 @@ export const uploadRealSchema = object({
     location: boolean(),
 })
 
+export const realByIdSchema = object({
+    id: string(),
+})
+
 export type UploadRealInput = TypeOf<typeof uploadRealSchema>
+export type RealByIdInput = TypeOf<typeof realByIdSchema>

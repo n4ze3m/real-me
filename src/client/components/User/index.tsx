@@ -5,6 +5,7 @@ import {
   createStyles,
   Divider,
   Group,
+  Modal,
   Paper,
   Skeleton,
   Text,
@@ -12,11 +13,13 @@ import {
 import { Calendar } from "@mantine/dates";
 import { useViewportSize } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
+import { Real } from "@prisma/client";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React from "react";
-import { Lock } from "tabler-icons-react";
+import { Lock, Trash } from "tabler-icons-react";
 import { trpc } from "~/utils/trpc";
+import { RealImage } from "../Common/RealImage";
 
 type UserErrorState = "NOT_FOUND" | "OK" | "LOADING";
 const useStyles = createStyles((theme) => ({
@@ -34,9 +37,7 @@ export const UserBody = () => {
   const [userError, setUserError] = React.useState<UserErrorState>("OK");
   const client = trpc.useContext();
   const { classes, cx } = useStyles();
-  const {
-    width
-  } = useViewportSize()
+  const { width } = useViewportSize();
   const { data, status } = trpc.user.findUserByUsername.useQuery(
     {
       username: router.query.username as string,
@@ -120,24 +121,92 @@ export const UserBody = () => {
         );
     }
   };
+  const [opened, setOpened] = React.useState(false);
+
+  const { mutate: deleteReal, isLoading: deleteRealLoading } =
+    trpc.reals.deleteReal.useMutation({
+      onSuccess: () => {
+        client.user.findUserByUsername.refetch({
+          username: router.query.username as string,
+        });
+
+        setOpened(false);
+
+        showNotification({
+          title: "Success",
+          color: "red",
+          message: "Deleted real",
+        });
+      },
+    });
+
+  const [real, setReal] = React.useState<Real | null>();
 
   const reals = (state: string) => {
     if (state === "SAME_USER") {
       return (
         <Group position="center" mt="md">
+          <Modal
+            title={`${moment(real?.createdAt).format("MMMM Do YYYY")}`}
+            opened={opened}
+            onClose={() => setOpened(false)}
+          >
+            {real && (
+              <React.Fragment>
+                <RealImage
+                  picture1={`https://xlhrytnztcpfrysksost.supabase.co/storage/v1/object/public/reals/${real.picOne}`}
+                  picture2={`https://xlhrytnztcpfrysksost.supabase.co/storage/v1/object/public/reals/${real.picTwo}`}
+                />
+                <Button
+                  loading={deleteRealLoading}
+                  onClick={() =>
+                    deleteReal({
+                      id: real.id,
+                    })
+                  }
+                  fullWidth
+                  leftIcon={<Trash />}
+                  color="red"
+                >
+                  Delete Real
+                </Button>
+              </React.Fragment>
+            )}
+          </Modal>
           <Calendar
             size={width > 600 ? "xl" : "md"}
             value={new Date()}
             dayClassName={(date, modifiers) =>
-              cx({ [classes.outside]: modifiers.outside, [classes.weekend]: modifiers.weekend })
+              cx({
+                [classes.outside]: modifiers.outside,
+                [classes.weekend]: modifiers.weekend,
+              })
             }
             disableOutsideEvents
             styles={(theme) => ({
-              day: { borderRadius: 0, height: 70, fontSize: theme.fontSizes.lg },
+              day: {
+                borderRadius: 0,
+                height: 70,
+                fontSize: theme.fontSizes.lg,
+              },
               weekday: { fontSize: theme.fontSizes.lg },
             })}
             onChange={(date) => {
-              console.log(date)
+              if (date) {
+                const fullDate = date.toISOString();
+
+                let realDate = data?.user?.reals?.filter((real) => {
+                  return (
+                    moment(real.createdAt).format("YYYY-MM-DD") ===
+                    moment(fullDate).format("YYYY-MM-DD")
+                  );
+                });
+
+                if (realDate && realDate.length > 0) {
+                  setReal(realDate[0]);
+                  setOpened(true);
+                }
+              }
             }}
             renderDay={(day) => {
               const date = day.getDate();

@@ -1,6 +1,7 @@
+import { TRPCError } from "@trpc/server"
 import { database } from "~/utils/database"
 import { Context } from "../context"
-import { UploadRealInput } from "../schema/reals.schema"
+import { RealByIdInput, UploadRealInput } from "../schema/reals.schema"
 import { deleteImagesFromServer } from "../services/supabase.service"
 
 export const uploadRealHandler = async ({
@@ -64,7 +65,7 @@ export const uploadRealHandler = async ({
 
     let type = "BOTH"
 
-    if(!explore) {
+    if (!explore) {
         type = "FRINEDS"
     }
 
@@ -85,14 +86,14 @@ export const uploadRealHandler = async ({
 }
 
 
-export const exploreRealsHandler = async ({}) => {
+export const exploreRealsHandler = async ({ }) => {
     const reals = await database.real.findMany({
         where: {
             type: "BOTH"
         },
         include: {
-             author: true,
-             realInfo: true,
+            author: true,
+            realInfo: true,
         },
         orderBy: [
             {
@@ -105,5 +106,49 @@ export const exploreRealsHandler = async ({}) => {
         code: "OK",
         error: false,
         reals
+    }
+}
+
+export const deleteRealHandler = async ({
+    ctx,
+    input
+}: {
+    ctx: Context,
+    input: RealByIdInput
+}) => {
+    const me = ctx.user
+    if (!me) {
+        throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "You are not authenticated"
+        })
+    }
+
+    const real = await database.real.findFirst({
+        where: {
+            id: input.id,
+            authorId: me.id
+        }
+    })
+
+    if (!real) {
+        throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Real not found"
+        })
+    }
+
+    await database.real.delete({
+        where: {
+            id: input.id
+        }
+    })
+
+    await deleteImagesFromServer([real.picOne, real.picTwo])
+
+
+    return {
+        code: "OK",
+        error: false
     }
 }

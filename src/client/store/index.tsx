@@ -21,7 +21,7 @@ export const useAuthStore = store<IAuthStore>((set) => ({
   setCourierHash: (courierHash: string) => set({ courierHash }),
   pendingNotification: false,
   setPendingNotification: (pendingNotification: boolean) => set({ pendingNotification }),
-  userPosted: false,
+  userPosted: true,
   setUserPosted: (userPosted: boolean) => set({ userPosted }),
   realPath: null,
   setRealPath: (realPath: string) => set({ realPath }),

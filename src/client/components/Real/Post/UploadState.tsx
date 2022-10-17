@@ -68,10 +68,14 @@ export const UploadState = ({ picture1, picture2 }: IUploadStateProps) => {
     }
   };
 
+  const client = trpc.useContext();
+
   const { mutate: uploadReal, isLoading: isUploading } = useMutation(onSubmit, {
     onSuccess: () => {
+      client.user.me.refetch();
       showNotification({
         title: "Success",
+        color: "green",
         message: "Real uploaded successfully",
       });
       router.push("/explore");
