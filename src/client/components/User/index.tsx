@@ -2,25 +2,41 @@ import {
   Avatar,
   Button,
   Center,
+  createStyles,
   Divider,
   Group,
   Paper,
   Skeleton,
   Text,
 } from "@mantine/core";
+import { Calendar } from "@mantine/dates";
+import { useViewportSize } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
+import moment from "moment";
 import { useRouter } from "next/router";
 import React from "react";
 import { Lock } from "tabler-icons-react";
 import { trpc } from "~/utils/trpc";
 
 type UserErrorState = "NOT_FOUND" | "OK" | "LOADING";
+const useStyles = createStyles((theme) => ({
+  outside: {
+    opacity: 0,
+  },
+
+  weekend: {
+    color: `${theme.colors.white} !important`,
+  },
+}));
 
 export const UserBody = () => {
   const router = useRouter();
   const [userError, setUserError] = React.useState<UserErrorState>("OK");
   const client = trpc.useContext();
-
+  const { classes, cx } = useStyles();
+  const {
+    width
+  } = useViewportSize()
   const { data, status } = trpc.user.findUserByUsername.useQuery(
     {
       username: router.query.username as string,
@@ -44,9 +60,9 @@ export const UserBody = () => {
       });
 
       showNotification({
-        title:"Success",
+        title: "Success",
         message: "Followed user",
-      })
+      });
     },
   });
 
@@ -106,23 +122,53 @@ export const UserBody = () => {
   };
 
   const reals = (state: string) => {
-    if (state === "SAME_USER" && data?.user?.realsCount === 0) {
+    if (state === "SAME_USER") {
       return (
         <Group position="center" mt="md">
-          <div>
-            <Text align="center" size="xl" color="dimmed">
-              Hmm, Post a real to get started!
-            </Text>
-            <Center>
-              <Button
-                color="teal"
-                mt="md"
-                onClick={() => router.push("/explore")}
-              >
-                Post a Real
-              </Button>
-            </Center>
-          </div>
+          <Calendar
+            size={width > 600 ? "xl" : "md"}
+            value={new Date()}
+            dayClassName={(date, modifiers) =>
+              cx({ [classes.outside]: modifiers.outside, [classes.weekend]: modifiers.weekend })
+            }
+            disableOutsideEvents
+            styles={(theme) => ({
+              day: { borderRadius: 0, height: 70, fontSize: theme.fontSizes.lg },
+              weekday: { fontSize: theme.fontSizes.lg },
+            })}
+            onChange={(date) => {
+              console.log(date)
+            }}
+            renderDay={(day) => {
+              const date = day.getDate();
+              const fullDate = day.toISOString();
+
+              let realDate = data?.user?.reals?.filter((real) => {
+                return (
+                  moment(real.createdAt).format("YYYY-MM-DD") ===
+                  moment(fullDate).format("YYYY-MM-DD")
+                );
+              });
+
+              if (realDate && realDate.length > 0) {
+                return (
+                  <div
+                    style={{
+                      backgroundImage: `url(https://xlhrytnztcpfrysksost.supabase.co/storage/v1/object/public/reals/${realDate[0].picTwo})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  >
+                    {date}
+                  </div>
+                );
+              }
+
+              return <div>{date}</div>;
+            }}
+          />
         </Group>
       );
     }
@@ -139,7 +185,7 @@ export const UserBody = () => {
       );
     }
 
-    return <div>data</div>;
+    return <div>Latest reals tha</div>;
   };
 
   if (status === "loading") {

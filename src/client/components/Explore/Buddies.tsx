@@ -19,24 +19,21 @@ export const Buddies = () => {
   const [buddiesState, setBuddiesState] =
     React.useState<BuddiesState>("LOADING");
 
-  const { data: buddies } = trpc.user.buddiesTimeline.useQuery(
-    undefined,
-    {
-      onSuccess: (data) => {
-        if (data.error) {
-          if (data.code === "UNAUTHORIZED") {
-            router.push("/auth");
-          }
-        } else {
-          if (data.code === "NO_BUDDIES") {
-            setBuddiesState("NO_BUDDIES");
-          } else {
-            setBuddiesState("OK");
-          }
+  const { data: buddies } = trpc.user.buddiesTimeline.useQuery(undefined, {
+    onSuccess: (data) => {
+      if (data.error) {
+        if (data.code === "UNAUTHORIZED") {
+          router.push("/auth");
         }
-      },
-    }
-  );
+      } else {
+        if (data.code === "NO_BUDDIES") {
+          setBuddiesState("NO_BUDDIES");
+        } else {
+          setBuddiesState("OK");
+        }
+      }
+    },
+  });
 
   return (
     <div>
@@ -64,15 +61,22 @@ export const Buddies = () => {
       )}
       {buddiesState === "OK" && (
         <Container size={800} mt="md" p="0">
-        <SimpleGrid
-          cols={2}
-          spacing="md"
-          breakpoints={[
-            { maxWidth: 980, cols: 2, spacing: "md" },
-            { maxWidth: 755, cols: 2, spacing: "sm" },
-            { maxWidth: 600, cols: 1, spacing: "sm" },
-          ]}
-        >
+          {buddies && buddies.reals && buddies.reals.length === 0 && (
+            <div>
+              <Text size="lg" align="center" color="dimmed">
+                No Reals from your buddies yet.
+              </Text>
+            </div>
+          )}
+          <SimpleGrid
+            cols={2}
+            spacing="md"
+            breakpoints={[
+              { maxWidth: 980, cols: 2, spacing: "md" },
+              { maxWidth: 755, cols: 2, spacing: "sm" },
+              { maxWidth: 600, cols: 1, spacing: "sm" },
+            ]}
+          >
             {buddies &&
               buddies.reals &&
               buddies.reals.map((real, index) => (
@@ -80,8 +84,8 @@ export const Buddies = () => {
                   <ExploreCard {...real} />
                 </div>
               ))}
-        </SimpleGrid>
-          </Container>
+          </SimpleGrid>
+        </Container>
       )}
     </div>
   );

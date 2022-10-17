@@ -19,9 +19,12 @@ export const AuthHandler = (props: IAuthHandlerProps) => {
         authStore.setUser(data.user);
         authStore.setCourierHash(data.courierHash);
         authStore.setPendingNotification(data.hasPendingRequests);
+        authStore.setRealPath(data.realPath);
+        authStore.setUserPosted(data.userPosted);
       }
     },
     retry: 1,
+    refetchInterval: 10000
   });
 
   return (

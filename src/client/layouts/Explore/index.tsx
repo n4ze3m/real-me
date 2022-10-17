@@ -137,34 +137,42 @@ function ExploreLayout({ children }: Props) {
                     <UnstyledButton
                       onClick={() => router.push("/explore/buddies")}
                     >
-                      <Indicator color="teal" disabled={pendingNotification}>
+                      <Indicator color="teal" disabled>
                         <Friends />
                       </Indicator>
                     </UnstyledButton>
                     <Inbox />
                   </>
                 )}
-                <Group spacing={7}>
-                  <Avatar
-                    src={
-                      user
-                        ? `https://avatars.dicebear.com/api/jdenticon/${user?.id}.svg?background=%230000ff`
-                        : "https://avatars.dicebear.com/api/jdenticon/xdsds-sdsdsds-dsdsds.svg?background=%230000ff"
+                <UnstyledButton
+                  onClick={() => {
+                    if (user) {
+                      router.push(`/@/${user.username}`);
                     }
-                    radius="xl"
-                    size={30}
-                    mr="sm"
-                  />
-                  <MediaQuery smallerThan={"sm"} styles={{ display: "none" }}>
-                    <div>
-                      <Text>{user ? user.name : "..."}</Text>
-                      <Text size="sm" color="dimmed">
-                        {user && `@${user.username}`}
-                      </Text>
-                    </div>
-                  </MediaQuery>
-                  <ChevronRight size={12} />
-                </Group>
+                  }}
+                >
+                  <Group spacing={7}>
+                    <Avatar
+                      src={
+                        user
+                          ? `https://avatars.dicebear.com/api/jdenticon/${user?.id}.svg?background=%230000ff`
+                          : "https://avatars.dicebear.com/api/jdenticon/xdsds-sdsdsds-dsdsds.svg?background=%230000ff"
+                      }
+                      radius="xl"
+                      size={30}
+                      mr="sm"
+                    />
+                    <MediaQuery smallerThan={"sm"} styles={{ display: "none" }}>
+                      <div>
+                        <Text>{user ? user.name : "..."}</Text>
+                        <Text size="sm" color="dimmed">
+                          {user && `@${user.username}`}
+                        </Text>
+                      </div>
+                    </MediaQuery>
+                    <ChevronRight size={12} />
+                  </Group>
+                </UnstyledButton>
               </Group>
             </Group>
           </Container>

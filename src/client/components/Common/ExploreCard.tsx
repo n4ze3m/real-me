@@ -6,7 +6,8 @@ export const ExploreCard = (
   real: Real & {
     author: User;
     realInfo: RealInfo;
-  }
+  },
+  isProfile?: boolean
 ) => {
   return (
     <Card withBorder shadow="sm" mb="md" radius="md">
@@ -20,8 +21,7 @@ export const ExploreCard = (
               mr="sm"
             />
             <div>
-              <Text>{real.author.name}</Text>
-              <Text size="sm" color="dimmed">
+              <Text color="dimmed">
                 {`@${real.author.username}`}
               </Text>
             </div>

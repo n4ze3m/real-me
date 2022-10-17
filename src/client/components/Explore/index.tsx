@@ -2,6 +2,7 @@ import React from "react";
 import { Tabs } from "@mantine/core";
 import { Friends, Planet } from "tabler-icons-react";
 import { Buddies } from "./Buddies";
+import { Explore } from "./Explore";
 export const ExploreBody = () => {
   return (
     <Tabs mt="md" color="green" variant="outline" defaultValue="friends">
@@ -19,7 +20,7 @@ export const ExploreBody = () => {
       </Tabs.Panel>
 
       <Tabs.Panel value="explore" pt="xs">
-        explore tab content
+       <Explore />
       </Tabs.Panel>
     </Tabs>
   );

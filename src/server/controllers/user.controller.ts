@@ -3,6 +3,7 @@ import { Context } from "../context"
 import { FindUserByUsernameInput, FollowBuddyInput } from "../schema/user.schema"
 import crypto from "crypto";
 import { courierNotification } from "../services/courier.service";
+import moment from "moment";
 
 export const currentUserHandler = async ({
     ctx
@@ -13,12 +14,33 @@ export const currentUserHandler = async ({
         const apiKey = process.env.COURIER_API_KEY_NOTIFICATIONS!
         const userId = ctx.user.id
 
-        const pendingRequests = await database.buddy.count({
+
+        const newReal = await database.realInfo.findFirst({
             where: {
-                accepted: false,
-                followingId: userId
+                createdAt: {
+                    gte: moment().startOf('day').toDate(),
+                    lte: moment().endOf('day').toDate()
+                }
             }
         })
+
+        let userPosted = true;
+        let realPath = "";
+
+
+        if (newReal) {
+            const isUserPosted = await database.real.findFirst({
+                where: {
+                    authorId: ctx.user.id,
+                    realInfoId: newReal.id
+                }
+            })
+            if(!isUserPosted){
+                userPosted = false
+                realPath = `/explore/reals/post/${newReal.id}`
+            }
+        }
+
 
 
         const computedUserHmac =
@@ -31,7 +53,9 @@ export const currentUserHandler = async ({
         return {
             user: ctx.user,
             courierHash: computedUserHmac,
-            hasPendingRequests: pendingRequests > 0
+            hasPendingRequests: false,
+            userPosted,
+            realPath
         }
     }
 
@@ -200,6 +224,11 @@ export const buddiesTimlineHandler = async ({
         where: {
             authorId: {
                 in: followingIds
+            },
+            createdAt: {
+                // today 
+                gte: moment().startOf("day").toISOString(),
+                lte: moment().endOf("day").toISOString()
             }
         },
         include: {

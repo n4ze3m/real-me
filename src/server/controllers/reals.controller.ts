@@ -83,3 +83,27 @@ export const uploadRealHandler = async ({
         error: false
     }
 }
+
+
+export const exploreRealsHandler = async ({}) => {
+    const reals = await database.real.findMany({
+        where: {
+            type: "BOTH"
+        },
+        include: {
+             author: true,
+             realInfo: true,
+        },
+        orderBy: [
+            {
+                createdAt: "desc"
+            }
+        ]
+    })
+
+    return {
+        code: "OK",
+        error: false,
+        reals
+    }
+}

@@ -8,6 +8,10 @@ export type IAuthStore = {
   setCourierHash: (courierHash: string) => void;
   pendingNotification: boolean;
   setPendingNotification: (pendingNotification: boolean) => void;
+  userPosted: boolean;
+  setUserPosted: (userPosted: boolean) => void;
+  realPath: string | null;
+  setRealPath: (realPath: string) => void;
 };
 
 export const useAuthStore = store<IAuthStore>((set) => ({
@@ -17,6 +21,10 @@ export const useAuthStore = store<IAuthStore>((set) => ({
   setCourierHash: (courierHash: string) => set({ courierHash }),
   pendingNotification: false,
   setPendingNotification: (pendingNotification: boolean) => set({ pendingNotification }),
+  userPosted: false,
+  setUserPosted: (userPosted: boolean) => set({ userPosted }),
+  realPath: null,
+  setRealPath: (realPath: string) => set({ realPath }),
 }));
 
 
