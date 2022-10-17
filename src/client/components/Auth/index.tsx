@@ -233,7 +233,7 @@ export const AuthBody = () => {
             mt="md"
             mb={50}
           >
-            Oh Wait! You don't have an account yet.
+            {"Oh Wait! You don't have an account yet."}
           </Title>
           <form
             onSubmit={registerForm.onSubmit((values) =>

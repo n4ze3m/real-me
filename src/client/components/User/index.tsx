@@ -71,7 +71,12 @@ export const UserBody = () => {
     switch (state) {
       case "SAME_USER":
         return (
-          <Button size="sm" color="teal" variant="outline">
+          <Button
+            size="sm"
+            color="teal"
+            variant="outline"
+            onClick={() => router.push("/explore/settings")}
+          >
             Edit Profile
           </Button>
         );
@@ -271,7 +276,7 @@ export const UserBody = () => {
         <Group position="center" mt="md">
           <div>
             <Text align="center" size="xl" color="dimmed">
-              I'm sorry, but we couldn't find that user. Please try again
+             {"I'm sorry, but we couldn't find that user. Please try again"}
             </Text>
             <Center>
               <Button

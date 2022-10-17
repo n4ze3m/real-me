@@ -10,7 +10,7 @@ export const RealInfo = () => {
     <React.Fragment>
       <Paper mb="md" p="xl" hidden={authStore.userPosted}>
         <Text size="lg" align="center" color="dimmed">
-          Hey, Don't forget to post a real today!
+          {"Hey, Don't forget to post a real today!"}
         </Text>
         <Group my="md" position="center">
           <Button

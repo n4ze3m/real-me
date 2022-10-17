@@ -33,8 +33,8 @@ export const BuddiesBody = () => {
             </Text>
           )}
           <Container size={450} mt="md">
-            {data.buddies.pending.map((buddy) => (
-              <BuddieCard user={buddy.follower} isPending={true} />
+            {data.buddies.pending.map((buddy, i) => (
+              <BuddieCard user={buddy.follower} key={i} isPending={true} />
             ))}
           </Container>
         </Tabs.Panel>
@@ -46,8 +46,8 @@ export const BuddiesBody = () => {
             </Text>
           )}
           <Container size={450} mt="md">
-            {data.buddies.buddies.map((buddy) => (
-              <BuddieCard user={buddy} isPending={false} />
+            {data.buddies.buddies.map((buddy, i) => (
+              <BuddieCard user={buddy} key={i} isPending={false} />
             ))}
           </Container>
         </Tabs.Panel>

@@ -20,6 +20,7 @@ function getBaseUrl() {
     return `http://${process.env.RENDER_INTERNAL_HOSTNAME}:${process.env.PORT}`;
   }
 
+
   // assume localhost
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
@@ -77,7 +78,6 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
 
               // If you're using Node 18, omit the "connection" header
               const {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 connection: _connection,
                 ...headers
               } = ctx.req.headers;

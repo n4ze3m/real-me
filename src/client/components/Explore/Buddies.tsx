@@ -43,18 +43,8 @@ export const Buddies = () => {
           <Group position="center">
             <div>
               <Text size="lg">
-                It's lonely here. Add some buddies to see their posts. Start
-                posting reals to get
+                {"It's lonely here. Add some buddies to see their posts."}
               </Text>
-              <Center>
-                <Button
-                  mt="md"
-                  color="teal"
-                  onClick={() => router.push("/post")}
-                >
-                  Post a real
-                </Button>
-              </Center>
             </div>
           </Group>
         </Paper>
