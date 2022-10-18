@@ -7,6 +7,7 @@ import {
   LoadingOverlay,
   createStyles,
 } from "@mantine/core";
+import { useRouter } from "next/router";
 import React from "react";
 import Webcam from "react-webcam";
 import { Circle, SwitchHorizontal } from "tabler-icons-react";
@@ -41,6 +42,7 @@ export const RealPostBody = () => {
   const [formatCountdown, setFormatCountdown] = React.useState("2:00");
   const [loadOverlay, setLoadOverlay] = React.useState(false);
   const { classes } = useStyles();
+  const router = useRouter();
 
   const switchCamera = () => {
     setCameraIndex((cameraIndex + 1) % 2);
@@ -121,6 +123,7 @@ export const RealPostBody = () => {
   React.useEffect(() => {
     if (state === "SUCCESS") {
       if (countdown === 0) {
+        router.push("/explorer");
         return;
       }
       const timer = setTimeout(() => {

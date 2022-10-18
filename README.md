@@ -73,3 +73,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you want to contribute to this project, please read the [CONTRIBUTING](CONTRIBUTING.md) file for details.
 
+# Attribution
+
+This project is inspired by [BeReal](https://bereal.com) and is not affiliated with them in any way.
