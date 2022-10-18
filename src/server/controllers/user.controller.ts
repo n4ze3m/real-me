@@ -334,7 +334,7 @@ export const followBuddyHandler = async ({
         title: "New follower request",
         subject: "New follower request",
         btn: "View Pending Requests",
-        click: `${getUrl()}/explore/buddies`
+        click: `${getUrl()}explore/buddies`
     })
 
     return {
@@ -463,7 +463,7 @@ export const acceptOrRemoveBuddyHandler = async ({
         title: "Request Accepted",
         subject: "Request Accepted",
         btn: "View all buddies",
-        click: `${getUrl()}/explore/buddies`
+        click: `${getUrl()}explore/buddies`
     })
 
 

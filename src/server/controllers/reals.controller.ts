@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server"
+import moment from "moment"
 import { database } from "~/utils/database"
 import { Context } from "../context"
 import { RealByIdInput, UploadRealInput } from "../schema/reals.schema"
@@ -87,9 +88,17 @@ export const uploadRealHandler = async ({
 
 
 export const exploreRealsHandler = async ({ }) => {
+
+    const startDay = moment().startOf('day').toISOString()
+    const endDay = moment().endOf('day').toISOString()
+
     const reals = await database.real.findMany({
         where: {
-            type: "BOTH"
+            type: "BOTH",
+            createdAt: {
+                gte: startDay,
+                lte: endDay
+            }
         },
         include: {
             author: true,

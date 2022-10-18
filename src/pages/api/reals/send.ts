@@ -62,14 +62,14 @@ export default async function handler(
                     message,
                     subject: title,
                     btn: 'Capture',
-                    click: `${getUrl()}/reals/post/${realInfo.id}`
+                    click: `${getUrl()}explore/reals/post/${realInfo.id}`
                 },
             },
 
         })
 
-        res.status(200).json({ requestId })
+        return res.status(200).json({ requestId })
     }
 
-    res.status(200).json({ message: 'Sent' })
+    return res.status(200).json({ message: 'Sent' })
 }

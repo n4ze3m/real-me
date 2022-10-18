@@ -262,23 +262,30 @@ export const UserBody = () => {
     }
 
     return (
-      <SimpleGrid
-        cols={2}
-        spacing="md"
-        breakpoints={[
-          { maxWidth: 980, cols: 2, spacing: "md" },
-          { maxWidth: 755, cols: 2, spacing: "sm" },
-          { maxWidth: 600, cols: 1, spacing: "sm" },
-        ]}
-      >
-        {data?.user &&
-          data?.user.reals.map((real, index) => (
-            <div key={index}>
-{/* @ts-ignore */}
-              <ExploreCard {...real} />
-            </div>
-          ))}
-      </SimpleGrid>
+      <div>
+        {data?.user && data?.user.reals.length === 0 && (
+          <Text align="center" size="xl" color="dimmed">
+            Nothing to see here!
+          </Text>
+        )}
+        <SimpleGrid
+          cols={2}
+          spacing="md"
+          breakpoints={[
+            { maxWidth: 980, cols: 2, spacing: "md" },
+            { maxWidth: 755, cols: 2, spacing: "sm" },
+            { maxWidth: 600, cols: 1, spacing: "sm" },
+          ]}
+        >
+          {data?.user &&
+            data?.user.reals.map((real, index) => (
+              <div key={index}>
+                {/* @ts-ignore */}
+                <ExploreCard {...real} />
+              </div>
+            ))}
+        </SimpleGrid>
+      </div>
     );
   };
 
