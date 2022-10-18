@@ -80,9 +80,8 @@ export const Features = () => {
             A new Real
           </Title>
           <Text>
-            A new Real is a new way to capture a real moment of your life. It
-            could be a photo without any filters, effects, or edits. It will be
-            available for 24 hours.
+            A new way to capture a real moment of your life. It
+            could be a photo without any filters, effects, or edits. 
           </Text>
         </Col>
       </Grid>
