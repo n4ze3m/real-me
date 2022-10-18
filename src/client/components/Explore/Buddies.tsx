@@ -1,6 +1,4 @@
 import {
-  Button,
-  Center,
   Container,
   Group,
   Paper,
@@ -12,33 +10,32 @@ import React from "react";
 import { trpc } from "~/utils/trpc";
 import { ExploreCard } from "../Common/ExploreCard";
 
-type BuddiesState = "OK" | "UNAUTHORIZED" | "NO_BUDDIES" | "LOADING";
 
 export const Buddies = () => {
   const router = useRouter();
-  const [buddiesState, setBuddiesState] =
-    React.useState<BuddiesState>("LOADING");
 
-  const { data: buddies } = trpc.user.buddiesTimeline.useQuery(undefined, {
+  const { data: buddies, status } = trpc.user.buddiesTimeline.useQuery(undefined, {
     onSuccess: (data) => {
       if (data.error) {
         if (data.code === "UNAUTHORIZED") {
           router.push("/auth");
         }
-      } else {
-        if (data.code === "NO_BUDDIES") {
-          setBuddiesState("NO_BUDDIES");
-        } else {
-          setBuddiesState("OK");
-        }
       }
     },
   });
 
+  if(status === "loading") {
+    return <Text>Loading...</Text>
+  }
+
+  if(status === "error") {
+    return <Text>Error</Text>
+  }
+
   return (
     <div>
-      {buddiesState === "LOADING" && <p>Loading...</p>}
-      {buddiesState === "NO_BUDDIES" && (
+      {buddies.code === "LOADING" && <p>Loading...</p>}
+      {buddies.code === "NO_BUDDIES" && (
         <Paper mt="md" p="xl">
           <Group position="center">
             <div>
@@ -49,7 +46,7 @@ export const Buddies = () => {
           </Group>
         </Paper>
       )}
-      {buddiesState === "OK" && (
+      {buddies.code === "OK" && (
         <Container size={800} mt="md" p="0">
           {buddies && buddies.reals && buddies.reals.length === 0 && (
             <div>
