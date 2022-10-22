@@ -38,6 +38,17 @@ export default async function handler(
     if (users.length > 0) {
         const courier = CourierClient({ authorizationToken: process.env.COURIER_API_KEY_NOTIFICATIONS! });
 
+        // this will update the mock post every day so timeline won't be empty
+        // will be removed when we have real data
+        await database.real.updateMany({
+            where: {
+                realInfoId: "mock"
+            },
+            data: {
+                createdAt: new Date().toISOString(),
+            }
+        })
+
 
         const courierUsers = users.map(user => {
             return {
@@ -53,7 +64,7 @@ export default async function handler(
 
         let message = '2 min to get capture a real moment'
 
-        const { requestId} = await courier.send({
+        const { requestId } = await courier.send({
             message: {
                 to: courierUsers,
                 template: process.env.COURIER_NOTIFICATION_TEMPLATE_ID!,

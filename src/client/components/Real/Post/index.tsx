@@ -123,7 +123,7 @@ export const RealPostBody = () => {
   React.useEffect(() => {
     if (state === "SUCCESS") {
       if (countdown === 0) {
-        router.push("/explorer");
+        router.push("/explore");
         return;
       }
       const timer = setTimeout(() => {
