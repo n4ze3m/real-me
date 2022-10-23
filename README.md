@@ -32,6 +32,8 @@ In order to run this project you need to have Supabase and Courier API keys. You
 
 ### Installing
 
+*Note*: For detailed instructions on how to install and run this project, please refer to the [SETUP](SETUP.md) file.
+
 1. Clone the repository
 
 ```bash
