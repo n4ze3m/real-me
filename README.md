@@ -1,5 +1,7 @@
 # Real Me
 
+> Currently demo is not working
+
 Just another social network. Inspired from BeReal
 
 
