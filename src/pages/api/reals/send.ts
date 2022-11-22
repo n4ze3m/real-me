@@ -30,57 +30,19 @@ export default async function handler(
         return
     }
 
-    const realInfo = await database.realInfo.create({
+    await database.realInfo.create({
         data: {}
     })
 
     const users = await database.user.findMany({})
-    if (users.length > 0) {
-        const courier = CourierClient({ authorizationToken: process.env.COURIER_API_KEY_NOTIFICATIONS! });
-
-        // this will update the mock post every day so timeline won't be empty
-        // will be removed when we have real data
-        await database.real.updateMany({
-            where: {
-                realInfoId: "mock"
-            },
-            data: {
-                createdAt: new Date().toISOString(),
-            }
-        })
-
-
-        const courierUsers = users.map(user => {
-            return {
-                user_id: user.id,
-                email: user.email,
-                courier: {
-                    channel: process.env.NEXT_PUBLIC_COURIER_CLIENT_KEY!,
-                },
-            }
-        })
-
-        let title = 'Time to get real'
-
-        let message = '2 min to get capture a real moment'
-
-        const { requestId } = await courier.send({
-            message: {
-                to: courierUsers,
-                template: process.env.COURIER_NOTIFICATION_TEMPLATE_ID!,
-                data: {
-                    title,
-                    message,
-                    subject: title,
-                    btn: 'Capture',
-                    click: `${getUrl()}explore/reals/post/${realInfo.id}`
-                },
-            },
-
-        })
-
-        return res.status(200).json({ requestId })
-    }
-
+    // for demo purposes
+    await database.real.updateMany({
+        where: {
+            realInfoId: "mock"
+        },
+        data: {
+            createdAt: new Date().toISOString(),
+        }
+    })
     return res.status(200).json({ message: 'Sent' })
 }
